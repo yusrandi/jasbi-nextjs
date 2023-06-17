@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Roles {
+  ADMIN
+  MITRA
+  USER
+}
+enum Hak {
+  ADMIN
+  MITRA
+  USER
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  address     String
+  phone       String
+  email       String    @unique
+  password    String?
+  role        Hak?      @default(ADMIN)
+  transaksis  Transaksi[]
+  createdAt   DateTime?  @default(now())
+  updatedAt   DateTime?  @updatedAt
+}
+model Kategori {
+  id        Int         @id @default(autoincrement())
+  name      String
+  product   Product[]
+  createdAt DateTime?   @default(now())
+  updatedAt DateTime?   @updatedAt
+}
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  kategori      Kategori @relation(fields: [kategoriId], references: [id])
+  kategoriId    Int
+  name          String
+  image         String
+  price         Int
+  stock         Int
+  unit          String?
+  description   String? @db.Text
+  transaksis    Transaksi[]
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+enum Status {
+  KERANJANG
+  DIPESAN
+  DITERIMA
+  DIPROSES
+  DIKIRIM
+  SELESAI
+}
+model Transaksi {
+  id            Int       @id @default(autoincrement())
+  datetime      String
+  transaksiCode String
+  customer      User      @relation(fields: [customerId], references: [id])
+  customerId    Int
+  product       Product   @relation(fields: [productId], references: [id])
+  productId     Int
+  qty           Int
+  total         Int
+  file          String?
+  status        Status?     @default(KERANJANG)
+  notifikasis   Notifikasi[]
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
+}
+model Notifikasi {
+  id            Int       @id @default(autoincrement())
+  datetime      String
+  transaksi     Transaksi      @relation(fields: [transaksiId], references: [id])
+  transaksiId   Int
+  status        Status?     @default(KERANJANG)
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
+}
+

@@ -1,0 +1,73 @@
+
+# HAMA
+
+###
+GET https://api.jasbiapp.site/api/user
+
+###
+POST https://api.jasbiapp.site/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "use@use.use",
+    "password": "1sampai8"
+    
+}
+###
+POST https://api.jasbiapp.site/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "User",
+    "address": "Sudiang",
+    "phone": "085298989742",
+    "email": "user1@use.use",
+    "password": "1sampai8",
+    "role": "USER"
+}
+
+# KATEGORI
+###
+GET http://192.168.31.140:3000/api/kategori
+###
+
+POST   https://api.jasbiapp.site/api/kategori
+Content-Type: application/json
+
+{
+    "name": "Makanan"
+    
+}
+
+# PRODUK
+###
+GET https://api.jasbiapp.site/api/product
+###
+
+# PRODUK
+###
+DELETE  https://api.jasbiapp.site/api/transaksi/10
+
+# USER
+
+###
+DELETE  https://api.jasbiapp.site/api/user/5
+
+###
+PUT https://api.jasbiapp.site/api/user/5
+Content-Type: application/json
+
+{
+    "name": "User 3 update",
+    "address": "Sudiang 3 update",
+    "phone": "085298989742 update",
+    "email": "user3@use.use",
+    "password": "1sampai8",
+    "role": "ADMIN"
+}
+
+# NOTIFIKASI
+###
+GET   http://localhost:3000api/kategori
+
+ http://localhost:3000api/kategori
