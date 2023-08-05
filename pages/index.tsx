@@ -17,6 +17,7 @@ import { KategoriService } from '../services/kategori_service';
 import { ProductService } from '../services/product_service';
 import { TransaksiService } from '../services/transaksi_service';
 import { UserService } from '../services/user_service';
+import { Dialog } from 'primereact/dialog';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -43,6 +44,7 @@ const lineData: ChartData = {
 const Dashboard = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [notifikasis, setNotifikasis] = useState<Notifikasi[]>([]);
+    const [notifikasi, setNotifikasi] = useState<Notifikasi>();
     const [kategoris, setKategoris] = useState<Kategori[]>([]);
     const [transaksis, setTransaksis] = useState<Transaksi[]>([]);
     const [users, setUsers] = useState<User[]>([]);
@@ -149,7 +151,6 @@ const Dashboard = () => {
         setLineOptions(lineOptions);
     };
 
-
     useEffect(() => {
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
@@ -170,6 +171,16 @@ const Dashboard = () => {
         "DIKIRIM": "info",
         "SELESAI": "success"
     }
+
+    const [showDialog, setShowDialog] = useState(false);
+    const [urlImage, setUrlImage] = useState<string>("image");
+
+
+    const openNew = (notif: Notifikasi) => {
+        setShowDialog(true);
+        setNotifikasi(notif);
+        setUrlImage(notif.transaksi!.file!)
+    };
 
     return (
         <div className="grid">
@@ -239,11 +250,12 @@ const Dashboard = () => {
                     <h5>Recent Sales</h5>
                     <DataTable value={notifikasis} rows={20} paginator responsiveLayout="scroll">
                         {/* <Column header="Image" body={(data) => <img className="shadow-2" src={`/demo/images/product/${data.image}`} alt={data.image} width="50" />} /> */}
-                        <Column field="datetime" header="Tanggal" sortable style={{ width: '35%' }} />
-                        <Column field="product" header="Product" sortable style={{ width: '35%' }} body={(data: Notifikasi) => data.transaksi?.product?.name!} />
-                        <Column field="total" header="Total" sortable style={{ width: '35%' }} body={(data: Notifikasi) => formatCurrency(data.transaksi?.product?.price! * data.transaksi?.qty!)} />
-                        <Column field="customer" header="Customer" sortable style={{ width: '35%' }} body={(data: Notifikasi) => data.transaksi?.customer?.name} />
-                        <Column field="status" header="Status" sortable style={{ width: '35%' }} body={(rowData: Notifikasi) => <Badge value={rowData.status} severity={rowData.status === 'KERANJANG' ? 'danger' : rowData.status === 'DIPESAN' ? 'warning' : rowData.status === 'SELESAI' ? 'success' : 'info'}></Badge>} />
+                        <Column field="status" header="View" sortable style={{ width: '15%' }} body={(rowData: Notifikasi) => rowData.status !== 'KERANJANG' && rowData.transaksi?.file! !== 'image' ? <Button icon="pi pi-eye" text onClick={() => openNew(rowData)} /> : null} />
+                        <Column field="status" header="Status" sortable style={{ width: '15%' }} body={(rowData: Notifikasi) => <Badge value={rowData.status} severity={rowData.status === 'KERANJANG' ? 'danger' : rowData.status === 'DIPESAN' ? 'warning' : rowData.status === 'SELESAI' ? 'success' : 'info'}></Badge>} />
+                        <Column field="datetime" header="Tanggal" sortable style={{ width: '15%' }} />
+                        <Column field="product" header="Product" sortable style={{ width: '15%' }} body={(data: Notifikasi) => data.transaksi?.product?.name!} />
+                        <Column field="total" header="Total" sortable style={{ width: '15%' }} body={(data: Notifikasi) => formatCurrency(data.transaksi?.product?.price! * data.transaksi?.qty!)} />
+                        <Column field="customer" header="Customer" sortable style={{ width: '15%' }} body={(data: Notifikasi) => data.transaksi?.customer?.name} />
                         {/* <Column
                             header="View"
                             style={{ width: '15%' }}
@@ -263,6 +275,15 @@ const Dashboard = () => {
                     <Chart type="line" data={lineData} options={lineOptions} />
                 </div>
             </div>
+
+            <Dialog visible={showDialog} style={{ width: '450px' }} modal onHide={() => { setShowDialog(false); setUrlImage("image") }}>
+                <div className="flex align-items-center justify-content-center">
+                    {/* <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} /> */}
+
+                    <img src={`/transaksi/${urlImage}`} alt={'transaksi file'} className="" height="100%" width={'100%'} />
+
+                </div>
+            </Dialog>
         </div>
     );
 };

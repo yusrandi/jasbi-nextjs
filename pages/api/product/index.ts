@@ -93,8 +93,6 @@ function readFile(req: NextApiRequest, saveLocally: boolean) : Promise<{fields: 
 }
 
 async function getData(req: NextApiRequest, res: NextApiResponse){
-
-
       try {
         const datas = await prisma.product.findMany({
             select: {id: true, image: true, kategoriId: true, name: true, price: true, stock: true, unit: true, description: true, kategori: true},

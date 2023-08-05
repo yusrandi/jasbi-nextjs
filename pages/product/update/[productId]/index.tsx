@@ -233,7 +233,7 @@ export default function ProductUpdate({ product, kategoris }: { product: Product
 
                         {
 
-                            product.image && <img src={`/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block" />
+                            product.image && <img src={`/products/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block" />
 
                         }
 
